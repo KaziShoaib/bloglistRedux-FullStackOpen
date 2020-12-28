@@ -9,10 +9,15 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
 
   const toggleDetailFlag = () => setDetailflag(!detailflag);
 
+  let showDeleteButton = { display : 'none' };
   const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
-  const userData = JSON.parse(loggedUserDataJSON);
-  const userIsTheCreator = blog.user.username === userData.username;
-  const showDeleteButton = { display : userIsTheCreator ? '' : 'none' };
+  if(loggedUserDataJSON){
+    const userData = JSON.parse(loggedUserDataJSON);
+    const userIsTheCreator = blog.user.username === userData.username;
+    if(userIsTheCreator){
+      showDeleteButton = { display : '' };
+    }
+  }
 
   //this function should be async
   //it should await the deleteBlog function
@@ -25,12 +30,14 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
 
   return (
     <div className='blog'>
-      <div style={showWhenHidden}>
+      {/* the className blogSummary is given for test purpose */}
+      <div style={showWhenHidden} className='blogSummary'>
         <p>
           {blog.title} {blog.author} <button onClick={toggleDetailFlag}>view</button>
         </p>
       </div>
-      <div style={showWhenDetail}>
+      {/* the className blogDetail is given for test purpose */}
+      <div style={showWhenDetail} className='blogDetail'>
         <p>
           {blog.title} {blog.author} <button onClick={toggleDetailFlag}>hide</button>
         </p>

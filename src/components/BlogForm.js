@@ -14,10 +14,10 @@ const BlogForm = ({ addBlog }) => {
   const [url, setUrl] = useState('');
 
   //this function should be async and await the addBlog function
-  const sendNewBlog = async (event) => {
+  const sendNewBlog = (event) => {
     event.preventDefault();
     const blogObject = { title, author, url };
-    await addBlog(blogObject);
+    addBlog(blogObject);
     setTitle('');
     setAuthor('');
     setUrl('');
@@ -27,10 +27,12 @@ const BlogForm = ({ addBlog }) => {
     <div>
       <h2>Add a new blog</h2>
       <form onSubmit={sendNewBlog}>
+        {/* the ids are given to input fields for testing purpose */}
         <div>
           Title:
           <input
             name="Title"
+            id='title'
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -40,6 +42,7 @@ const BlogForm = ({ addBlog }) => {
           Author:
           <input
             name="Author"
+            id='author'
             type="text"
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
@@ -49,6 +52,7 @@ const BlogForm = ({ addBlog }) => {
           URL:
           <input
             name="URL"
+            id='url'
             type="text"
             value={url}
             onChange={(event) => setUrl(event.target.value)}
