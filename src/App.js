@@ -71,16 +71,24 @@ const App = () => {
     //we can access the toggleVisible function defined in the 
     //Togglable component from this App component because of the ref mechanism
     //details inside the Togglable component
-    blogFormRef.current.toggleVisible();
+    blogFormRef.current.toggleVisible();    
     try {
       const returnedBlog = await blogService.create(blogObject);
-      const allBlogs = await blogService.getAll();
-      setBlogs(allBlogs);      
+      //the returnedBlog's user field is not populated
+      //it just contains the id of the creator
+      const modifiedReturnedBlog = {
+        ...returnedBlog, 
+        user:{
+          username:user.username, //from the user state
+          name:user.name, // from the user state
+          id:returnedBlog.user.toString()
+        }
+      }                
+      setBlogs(blogs.concat(modifiedReturnedBlog));
       setSuccessMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`);
       setTimeout(()=>{
         setSuccessMessage(null);
       }, 5000);
-      
     } catch(exception){
       setErrorMessage(exception.response.data.error);
       setTimeout(()=>{
@@ -93,6 +101,10 @@ const App = () => {
     try {
       await blogService.deleteBlog(id);
       setBlogs(blogs.filter(b => b.id !== id));
+      setSuccessMessage(`the blog has been successfully deleted`);
+      setTimeout(()=>{
+        setSuccessMessage(null);
+      }, 5000);
     } catch(exception) {
       setErrorMessage(exception.data.error.message);
       setTimeout(()=>{
@@ -103,16 +115,13 @@ const App = () => {
 
 
   const increaseLikeOf = async (id) => {
-    let blog = blogs.find(b => b.id === id);
-    //console.log('old blog : ',blog)
+    let blog = blogs.find(b => b.id === id);   
     let likeObj = { likes : blog.likes + 1};
-    //console.log('changed blog : ',changedBlog);
-    try {
-      // const returnedBlog = await blogService.update(id, likeObj);
-      // setBlogs(blogs.map(b => b.id === id ? returnedBlog : b));
-      await blogService.update(id, likeObj);
-      const allBlogs = await blogService.getAll();
-      setBlogs(allBlogs);      
+    try {      
+      await blogService.update(id, likeObj);  
+      //we can't just replace the old blog with the returned blog because 
+      //the user field is not populated in the returned blog   
+      setBlogs(blogs.map(blog => blog.id===id ? {...blog, likes:blog.likes+1} : blog));     
     } catch(exception) {
       setErrorMessage(`Blog ${blog.title} has been deleted`);
       setTimeout(()=>{
@@ -138,6 +147,12 @@ const App = () => {
     );
   } 
 
+
+  const sortBlogs = () => {
+    const sortedBlog = [...blogs].sort((bloga, blogb) => blogb.likes - bloga.likes);
+    setBlogs(sortedBlog);
+  }
+
   return (
     <div>
       <Notification 
@@ -153,8 +168,8 @@ const App = () => {
           <button onClick={handleLogout}>Log out</button>
           {blogForm()}
           <h2>BLOGS</h2>
-          {blogs
-            .sort((bloga, blogb) => blogb.likes - bloga.likes).map(blog => 
+          <button onClick={sortBlogs}>Sort by likes</button>
+          {blogs.map(blog => 
               <Blog 
                 key={blog.id} 
                 blog={blog} 

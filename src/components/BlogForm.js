@@ -14,10 +14,10 @@ const BlogForm = ({addBlog}) => {
   const [url, setUrl] = useState('');
 
   //this function should be async and await the addBlog function
-  const sendNewBlog = (event) => {
+  const sendNewBlog = async (event) => {
     event.preventDefault();
     const blogObject = {title, author, url};
-    addBlog(blogObject);
+    await addBlog(blogObject);
     setTitle('');
     setAuthor('');
     setUrl('');

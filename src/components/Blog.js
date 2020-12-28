@@ -14,6 +14,8 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   const userIsTheCreator = blog.user.username === userData.username;
   const showDeleteButton = {display : userIsTheCreator ? '' : 'none'};
 
+  //this function should be async 
+  //it should await the deleteBlog function
   const handleDelete = (id) => {
     if(window.confirm(`${blog.title}`)){
       deleteBlog(id);
