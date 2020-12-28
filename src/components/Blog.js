@@ -1,27 +1,27 @@
-import React, { useState } from 'react'
-import '../index.css'
+import React, { useState } from 'react';
+import '../index.css';
 
 const Blog = ({ blog, addLike, deleteBlog }) => {
   const [detailflag, setDetailflag] = useState(false);
 
-  const showWhenHidden = {display : detailflag ? 'none' : ''}
-  const showWhenDetail = {display : detailflag ? '' : 'none'}
+  const showWhenHidden = { display : detailflag ? 'none' : '' };
+  const showWhenDetail = { display : detailflag ? '' : 'none' };
 
   const toggleDetailFlag = () => setDetailflag(!detailflag);
-  
-  const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
-  const userData = JSON.parse(loggedUserDataJSON); 
-  const userIsTheCreator = blog.user.username === userData.username;
-  const showDeleteButton = {display : userIsTheCreator ? '' : 'none'};
 
-  //this function should be async 
+  const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
+  const userData = JSON.parse(loggedUserDataJSON);
+  const userIsTheCreator = blog.user.username === userData.username;
+  const showDeleteButton = { display : userIsTheCreator ? '' : 'none' };
+
+  //this function should be async
   //it should await the deleteBlog function
   const handleDelete = (id) => {
     if(window.confirm(`${blog.title}`)){
       deleteBlog(id);
     }
-    
-  }
+
+  };
 
   return (
     <div className='blog'>
@@ -48,7 +48,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
