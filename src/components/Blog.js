@@ -33,7 +33,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
       {/* the className blogSummary is given for test purpose */}
       <div style={showWhenHidden} className='blogSummary'>
         <p>
-          {blog.title} {blog.author} <button onClick={toggleDetailFlag}>view</button>
+          {blog.title} {blog.author} <button onClick={toggleDetailFlag} className='view-button'>view</button>
         </p>
       </div>
       {/* the className blogDetail is given for test purpose */}
@@ -45,14 +45,12 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
           <a href={blog.url}>{blog.url}</a>
         </p>
         <p>
-          Likes <span>{blog.likes}</span> <button onClick={addLike}>Like</button>
+          Likes <span className='like-count'>{blog.likes}</span> <button onClick={addLike} className='like-button'>Like</button>
         </p>
         <p>
           {blog.user.name}
         </p>
-        <div style={showDeleteButton}>
-          <button onClick={() => handleDelete(blog.id)}>Delete</button>
-        </div>
+        <button style={showDeleteButton} className='delete-button' onClick={() => handleDelete(blog.id)}>Delete</button>
       </div>
     </div>
   );

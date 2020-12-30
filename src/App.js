@@ -170,7 +170,7 @@ const App = () => {
             <button onClick={handleLogout}>Log out</button>
             {blogForm()}
             <h2>BLOGS</h2>
-            <button onClick={sortBlogs}>Sort by likes</button>
+            <button onClick={sortBlogs} id='sort-button'>Sort by likes</button>
             {blogs.map(blog =>
               <Blog
                 key={blog.id}

@@ -24,12 +24,14 @@ const LoginForm = ({ handleLogin }) => {
     <div>
       <h2>Log in to application</h2>
       <form onSubmit={sendUserCredentials}>
+        {/* the ids are given for test purpose */}
         <div>
           Username:
           <input
             name="Username"
             value={username}
             type="text"
+            id="username"
             onChange = {event => setUsername(event.target.value)}
           />
         </div>
@@ -39,10 +41,11 @@ const LoginForm = ({ handleLogin }) => {
             name="Password"
             value={password}
             type="password"
+            id='password'
             onChange = {event => setPassword(event.target.value)}
           />
         </div>
-        <button type="submit">Log in</button>
+        <button id='login-button' type="submit">Log in</button>
       </form>
     </div>
   );
