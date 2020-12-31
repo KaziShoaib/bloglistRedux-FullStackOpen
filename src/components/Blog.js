@@ -22,7 +22,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   //this function should be async
   //it should await the deleteBlog function
   const handleDelete = (id) => {
-    if(window.confirm(`${blog.title}`)){
+    if(window.confirm(`Do you want to delete ${blog.title}?`)){
       deleteBlog(id);
     }
 
