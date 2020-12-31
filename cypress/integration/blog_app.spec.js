@@ -110,18 +110,18 @@ describe('Blog App', function(){
 
 
       it('like can be incresed by clikcing like button', function(){
-        cy.contains(newBlog.title).get('.view-button').click();
-        cy.contains(newBlog.title).parent().get('.like-button').click();
-        cy.get('html').should('not.contain','Likes 5');
-        cy.get('html').should('contain','Likes 6');
+        cy.get('.view-button').click();
+        cy.get('.like-button').click();
+        cy.get('.like-count').should('not.contain','5');
+        cy.get('.like-count').should('contain','6');
       });
 
 
       it('a blog can be deleted by it\'s creator', function(){
-        cy.contains(newBlog.title).get('.view-button').click();
-        cy.contains(newBlog.title).parent().get('.delete-button').click();
+        cy.get('.view-button').click();
+        cy.get('.delete-button').click();
         cy.on('window:confirm', () => true);
-        cy.get('html').should('not.contain', newBlog.title);
+        cy.get('.blog').should('not.exist');
       });
 
 
@@ -134,7 +134,7 @@ describe('Blog App', function(){
         };
         cy.request('POST', 'http://localhost:3001/api/users', newUser);
         cy.login({ username: newUser.username, password:newUser.password });
-        cy.contains(newBlog.title).get('.view-button').click();
+        cy.get('.view-button').click();
         cy.get('.delete-button').should('have.css', 'display', 'none');
       });
     });
