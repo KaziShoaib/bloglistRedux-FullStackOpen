@@ -1,3 +1,5 @@
+//to run the tests run the cypress script defined in the package.json file
+
 //it is advised not to use arrow functions here
 
 //this is a custom command that logs in a user
