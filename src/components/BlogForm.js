@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createNewBlog } from '../reducers/blogReducer';
 import '../index.css';
@@ -18,6 +18,7 @@ const BlogForm = () => {
   const [dispalayFormFlag, setDisplayFormFlag] = useState(false);
 
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.userData);
 
   const hideWhenDisplayed = { display : dispalayFormFlag ? 'none' : '' };
   const showWhenDisplayed = { display : dispalayFormFlag ? '' : 'none' };
@@ -27,7 +28,7 @@ const BlogForm = () => {
   const sendNewBlog = async (event) => {
     event.preventDefault();
     const blogObject = { title, author, url };
-    await dispatch(createNewBlog(blogObject));
+    await dispatch(createNewBlog(blogObject, userData));
     setTitle('');
     setAuthor('');
     setUrl('');

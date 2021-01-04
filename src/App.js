@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch  } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector  } from 'react-redux';
 
 import BlogList from './components/BlogList';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
-import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
+import UserInfo from './components/UserInfo';
 
-import { createNotification } from './reducers/notificationReducer';
+
 import { initializeBlogs } from './reducers/blogReducer';
+import { initializeUser  } from './reducers/userReducer';
 
 
 const App = () => {
-  const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -27,52 +27,23 @@ const App = () => {
     if(loggedUserDataJSON){
       //userData contains the token, username and name
       const userData = JSON.parse(loggedUserDataJSON);
-      setUser(userData);
+      dispatch(initializeUser(userData));
       //setToken will prepared a bearer token in the blogService local variable token
       blogService.setToken(userData.token);
     }
-  }, []);
+  }, [dispatch]);
 
-  const handleLogin = async (userCredentials) => {
-
-    try{
-      //userData will have the username, name and token returned from backend
-      const userData = await loginService.login(userCredentials);
-      //saving the userData in the local storage
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(userData)
-      );
-      setUser(userData);
-      //creating a bearer token in the blogService local variable token
-      blogService.setToken(userData.token);
-      dispatch(createNotification('success', 'Login Successful', 5000));
-    }
-    catch(exception){
-      dispatch(createNotification('error', 'Invalid username or password', 5000));
-    }
-  };
-
-
-  const handleLogout = () => {
-    //clearing the local storage of the userData
-    window.localStorage.removeItem('loggedBlogappUser');
-    //setting the blogService local variable token to null
-    blogService.setToken(null);
-    setUser(null);
-    dispatch(createNotification('success', 'Logout Successful', 5000));
-  };
-
+  const userData = useSelector(state => state.userData);
 
   return (
     <div>
       <Notification />
 
       {
-        user === null ?
-          <LoginForm handleLogin={handleLogin} /> :
+        userData === null ?
+          <LoginForm /> :
           <div>
-            <h2>{user.name} logged in</h2>
-            <button onClick={handleLogout}>Log out</button>
+            <UserInfo />
             <BlogForm />
             <BlogList />
           </div>

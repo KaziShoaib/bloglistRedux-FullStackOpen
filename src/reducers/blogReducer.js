@@ -1,5 +1,4 @@
 import blogService from '../services/blogs';
-import { getUserData } from '../utils/userInfo';
 import { createNotification } from './notificationReducer';
 
 const blogReducer = (state=[], action) => {
@@ -35,11 +34,10 @@ export const initializeBlogs = () => {
 };
 
 
-export const createNewBlog = (blogObject) => {
+export const createNewBlog = (blogObject, userData) => {
   return async dispatch => {
     try {
       const returnedBlog = await blogService.create(blogObject);
-      const userData = getUserData();
       const modifiedReturnedBlog = {
         ...returnedBlog,
         user : {

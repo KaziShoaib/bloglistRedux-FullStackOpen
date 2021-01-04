@@ -5,13 +5,13 @@ import thunk from 'redux-thunk';
 
 import notificationReducer from './reducers/notificationReducer';
 import blogReducer from './reducers/blogReducer';
-import loginReducer from './reducers/loginReducer';
+import userReducer from './reducers/userReducer';
 
 
 const reducers = combineReducers({
   notifications: notificationReducer,
   blogs: blogReducer,
-  login: loginReducer
+  userData : userReducer
 });
 
 const store = createStore( reducers, composeWithDevTools(applyMiddleware(thunk)));

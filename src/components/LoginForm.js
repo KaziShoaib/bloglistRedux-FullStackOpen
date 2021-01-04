@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { loginUser } from '../reducers/userReducer';
 import '../index.css';
 
 //this component creates it's own states
@@ -6,16 +9,18 @@ import '../index.css';
 //once the log in button is pressed the login form submission function
 //sends the new user credentials to the props function
 
-const LoginForm = ({ handleLogin }) => {
+const LoginForm = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const dispatch = useDispatch();
+
   //this function should be async and await the handleLogin function
-  const sendUserCredentials = (event) => {
+  const sendUserCredentials = async (event) => {
     event.preventDefault();
     const userCredentials = { username, password };
-    handleLogin(userCredentials);
+    await dispatch(loginUser(userCredentials));
     setUsername('');
     setPassword('');
   };

@@ -84,7 +84,7 @@ describe('Blog App', function(){
 
 
     it('a blog can be created', function(){
-      cy.contains('add a blog').click();
+      cy.contains('Add a Blog').click();
 
       cy.get('#title').type('How To Work With Singletons in JavaScript');
       cy.get('#author').type('Vijay Prasanna');
