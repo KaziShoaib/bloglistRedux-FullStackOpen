@@ -1,29 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
 import loginService from './services/login';
 import LoginForm from './components/LoginForm';
-import Togglable from './components/Togglable';
 import BlogForm from './components/BlogForm';
 
 import { createNotification } from './reducers/notificationReducer';
+import { initializeBlogs } from './reducers/blogReducer';
 
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  //we will use this ref to access functions defined in other components
-  //i.e. components that are rendered from the App component
-  const blogFormRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    );
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     //searching for log in info in the local storage
@@ -36,9 +33,6 @@ const App = () => {
       blogService.setToken(userData.token);
     }
   }, []);
-
-  const dispatch = useDispatch();
-
 
   const handleLogin = async (userCredentials) => {
 
@@ -70,29 +64,6 @@ const App = () => {
   };
 
 
-  const addBlog = async (blogObject) => {
-    //we can access the toggleVisible function defined in the
-    //Togglable component from this App component because of the ref mechanism
-    //details inside the Togglable component
-    blogFormRef.current.toggleVisible();
-    try {
-      const returnedBlog = await blogService.create(blogObject);
-      //the returnedBlog's user field is not populated
-      //it just contains the id of the creator
-      const modifiedReturnedBlog = {
-        ...returnedBlog,
-        user:{
-          username:user.username, //from the user state
-          name:user.name, // from the user state
-          id:returnedBlog.user.toString()
-        }
-      };
-      setBlogs(blogs.concat(modifiedReturnedBlog));
-      dispatch(createNotification('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 5000));
-    } catch(exception){
-      dispatch(createNotification('error', exception.response.data.error, 5000));
-    }
-  };
 
   const deleteBlog = async(id) => {
     try {
@@ -121,28 +92,13 @@ const App = () => {
     }
   };
 
-
-  const blogForm = () => {
-    //The Togglable component has opening and closing tag
-    //the BlogForm component is inside the Togglable component
-    //BlogForm component will be available to the Togglable component
-    //as {props.children}
-    return (
-      //the ref is transferred because we want to access a function
-      //defined in the Togglable component from here
-      //i.e. from the App component
-      <Togglable buttonLabel="add a blog" ref={blogFormRef}>
-        <BlogForm addBlog={addBlog} />
-      </Togglable>
-    );
-  };
-
-
   const sortBlogs = () => {
     const sortedBlog = [...blogs].sort((bloga, blogb) => blogb.likes - bloga.likes);
     setBlogs(sortedBlog);
   };
 
+
+  const initialBlogs = useSelector(state => state.blogs);
   return (
     <div>
       <Notification />
@@ -153,10 +109,10 @@ const App = () => {
           <div>
             <h2>{user.name} logged in</h2>
             <button onClick={handleLogout}>Log out</button>
-            {blogForm()}
+            <BlogForm />
             <h2>BLOGS</h2>
             <button onClick={sortBlogs} id='sort-button'>Sort by likes</button>
-            {blogs.map(blog =>
+            {initialBlogs.map(blog =>
               <Blog
                 key={blog.id}
                 blog={blog}
