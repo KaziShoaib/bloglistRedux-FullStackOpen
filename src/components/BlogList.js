@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { removeBlog, addLikeTo, sortBlogsByLike } from '../reducers/blogReducer';
+import { getUserData } from '../utils/userInfo';
 import '../index.css';
 
-const Blog = ({ blog, addLike, deleteBlog }) => {
+const Blog = ({ blog }) => {
   const [detailflag, setDetailflag] = useState(false);
 
   const showWhenHidden = { display : detailflag ? 'none' : '' };
@@ -10,9 +14,8 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   const toggleDetailFlag = () => setDetailflag(!detailflag);
 
   let showDeleteButton = { display : 'none' };
-  const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
-  if(loggedUserDataJSON){
-    const userData = JSON.parse(loggedUserDataJSON);
+  const userData = getUserData();
+  if(userData){
     const userIsTheCreator = blog.user.username === userData.username;
     if(userIsTheCreator){
       showDeleteButton = { display : '' };
@@ -21,11 +24,16 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
 
   //this function should be async
   //it should await the deleteBlog function
+  const dispatch = useDispatch();
+
   const handleDelete = (id) => {
     if(window.confirm(`Do you want to delete ${blog.title}?`)){
-      deleteBlog(id);
+      dispatch(removeBlog(id));
     }
+  };
 
+  const addLike = (id, blogObject) => {
+    dispatch(addLikeTo(id, blogObject));
   };
 
   return (
@@ -45,7 +53,7 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
           <a href={blog.url}>{blog.url}</a>
         </p>
         <p>
-          Likes <span className='like-count'>{blog.likes}</span> <button onClick={addLike} className='like-button'>Like</button>
+          Likes <span className='like-count'>{blog.likes}</span> <button onClick={() => addLike(blog.id, blog)} className='like-button'>Like</button>
         </p>
         <p>
           {blog.user.name}
@@ -56,4 +64,24 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
   );
 };
 
-export default Blog;
+
+const BlogList = () => {
+  const blogs = useSelector(state => state.blogs);
+  const dispatch = useDispatch();
+
+  const sortBlogs = (blogs) => {
+    dispatch(sortBlogsByLike(blogs));
+  };
+
+  return (
+    <div>
+      <button onClick={() => sortBlogs(blogs)}>Sort by Likes</button>
+      <h2>BLOGS</h2>
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} />
+      )}
+    </div>
+  );
+};
+
+export default BlogList;

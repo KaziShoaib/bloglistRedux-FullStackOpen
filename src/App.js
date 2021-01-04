@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch  } from 'react-redux';
 
-import Blog from './components/Blog';
+import BlogList from './components/BlogList';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
 import loginService from './services/login';
@@ -13,7 +13,6 @@ import { initializeBlogs } from './reducers/blogReducer';
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -64,41 +63,6 @@ const App = () => {
   };
 
 
-
-  const deleteBlog = async(id) => {
-    try {
-      await blogService.deleteBlog(id);
-      setBlogs(blogs.filter(b => b.id !== id));
-      dispatch(createNotification('success', 'the blog has been successfully deleted', 5000));
-    } catch(exception) {
-      dispatch(createNotification('error', exception.data.error.message, 5000));
-    }
-  };
-
-
-  const increaseLikeOf = async (id) => {
-    let blog = blogs.find(b => b.id === id);
-    let likeObj = { likes : blog.likes + 1 };
-    try {
-      await blogService.update(id, likeObj);
-      //we can't just replace the old blog with the returned blog because
-      //the user field is not populated in the returned blog
-      setBlogs(blogs.map(blog => {
-        return blog.id===id ? { ...blog, likes:blog.likes+1 } : blog;
-      }));
-    } catch(exception) {
-      dispatch(createNotification('error', `Blog ${blog.title} has been deleted`, 5000));
-      setBlogs(blogs.filter(b => b.id !== id));
-    }
-  };
-
-  const sortBlogs = () => {
-    const sortedBlog = [...blogs].sort((bloga, blogb) => blogb.likes - bloga.likes);
-    setBlogs(sortedBlog);
-  };
-
-
-  const initialBlogs = useSelector(state => state.blogs);
   return (
     <div>
       <Notification />
@@ -110,17 +74,7 @@ const App = () => {
             <h2>{user.name} logged in</h2>
             <button onClick={handleLogout}>Log out</button>
             <BlogForm />
-            <h2>BLOGS</h2>
-            <button onClick={sortBlogs} id='sort-button'>Sort by likes</button>
-            {initialBlogs.map(blog =>
-              <Blog
-                key={blog.id}
-                blog={blog}
-                addLike={() => increaseLikeOf(blog.id)}
-                deleteBlog = {deleteBlog}
-              />
-            )
-            }
+            <BlogList />
           </div>
       }
 

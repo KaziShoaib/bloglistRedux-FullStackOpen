@@ -24,9 +24,7 @@ const BlogForm = () => {
 
   const toggleDisplayFormFlag = () => setDisplayFormFlag(!dispalayFormFlag);
 
-  //this function should be async and await the addBlog function
   const sendNewBlog = async (event) => {
-    console.log('here');
     event.preventDefault();
     const blogObject = { title, author, url };
     await dispatch(createNewBlog(blogObject));
