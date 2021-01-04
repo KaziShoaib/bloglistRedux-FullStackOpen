@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
@@ -7,10 +9,11 @@ import LoginForm from './components/LoginForm';
 import Togglable from './components/Togglable';
 import BlogForm from './components/BlogForm';
 
+import { createNotification } from './reducers/notificationReducer';
+
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
   //we will use this ref to access functions defined in other components
   //i.e. components that are rendered from the App component
@@ -34,6 +37,8 @@ const App = () => {
     }
   }, []);
 
+  const dispatch = useDispatch();
+
 
   const handleLogin = async (userCredentials) => {
 
@@ -47,13 +52,10 @@ const App = () => {
       setUser(userData);
       //creating a bearer token in the blogService local variable token
       blogService.setToken(userData.token);
-
+      dispatch(createNotification('success', 'Login Successful', 5000));
     }
     catch(exception){
-      setErrorMessage('Invalid username or password');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('error', 'Invalid username or password', 5000));
     }
   };
 
@@ -64,6 +66,7 @@ const App = () => {
     //setting the blogService local variable token to null
     blogService.setToken(null);
     setUser(null);
+    dispatch(createNotification('success', 'Logout Successful', 5000));
   };
 
 
@@ -85,15 +88,9 @@ const App = () => {
         }
       };
       setBlogs(blogs.concat(modifiedReturnedBlog));
-      setSuccessMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(createNotification('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 5000));
     } catch(exception){
-      setErrorMessage(exception.response.data.error);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('error', exception.response.data.error, 5000));
     }
   };
 
@@ -101,15 +98,9 @@ const App = () => {
     try {
       await blogService.deleteBlog(id);
       setBlogs(blogs.filter(b => b.id !== id));
-      setSuccessMessage('the blog has been successfully deleted');
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(createNotification('success', 'the blog has been successfully deleted', 5000));
     } catch(exception) {
-      setErrorMessage(exception.data.error.message);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('error', exception.data.error.message, 5000));
     }
   };
 
@@ -125,10 +116,7 @@ const App = () => {
         return blog.id===id ? { ...blog, likes:blog.likes+1 } : blog;
       }));
     } catch(exception) {
-      setErrorMessage(`Blog ${blog.title} has been deleted`);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('error', `Blog ${blog.title} has been deleted`, 5000));
       setBlogs(blogs.filter(b => b.id !== id));
     }
   };
@@ -157,10 +145,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification
-        successMessage={successMessage}
-        errorMessage={errorMessage}
-      />
+      <Notification />
 
       {
         user === null ?
