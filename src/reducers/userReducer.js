@@ -53,6 +53,7 @@ export const initializeUser = (userData) => {
       type : 'INIT_USER',
       data: userData
     });
+    blogService.setToken(userData.token);
   };
 };
 

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';
 
 import BlogList from './components/BlogList';
-import blogService from './services/blogs';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -29,7 +28,6 @@ const App = () => {
       const userData = JSON.parse(loggedUserDataJSON);
       dispatch(initializeUser(userData));
       //setToken will prepared a bearer token in the blogService local variable token
-      blogService.setToken(userData.token);
     }
   }, [dispatch]);
 
