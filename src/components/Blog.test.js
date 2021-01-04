@@ -1,3 +1,5 @@
+//these tests have not been modified for redux controls
+
 //test command -> set CI=true && npm test
 //test coverage -> set CI=true && npm test -- --coverage
 //report can be found on coverage/lcov-report
