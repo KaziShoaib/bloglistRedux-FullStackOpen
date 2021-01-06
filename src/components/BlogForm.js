@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createNewBlog } from '../reducers/blogReducer';
+import { useField } from '../hooks';
 import '../index.css';
 
 //this component creates it's own states
-//it get one function in props
-//once the create button is pressed the login form submission function
-//sends the new blogObject to the props function
 
 
 const BlogForm = () => {
-
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const { field: title, reset: resetTitle } = useField('text');
+  const { field: author, reset: resetAuthor } = useField('text');
+  const { field: url, reset: resetUrl } = useField('text');
   const [dispalayFormFlag, setDisplayFormFlag] = useState(false);
 
   const dispatch = useDispatch();
@@ -27,11 +24,11 @@ const BlogForm = () => {
 
   const sendNewBlog = async (event) => {
     event.preventDefault();
-    const blogObject = { title, author, url };
+    const blogObject = { title: title.value, author: author.value, url: url.value };
     await dispatch(createNewBlog(blogObject, userData));
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    resetTitle();
+    resetAuthor();
+    resetUrl();
     toggleDisplayFormFlag();
   };
 
@@ -49,9 +46,7 @@ const BlogForm = () => {
             <input
               name="Title"
               id='title'
-              type="text"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              {...title}
             />
           </div>
           <div>
@@ -59,9 +54,7 @@ const BlogForm = () => {
             <input
               name="Author"
               id='author'
-              type="text"
-              value={author}
-              onChange={(event) => setAuthor(event.target.value)}
+              {...author}
             />
           </div>
           <div>
@@ -69,9 +62,7 @@ const BlogForm = () => {
             <input
               name="URL"
               id='url'
-              type="text"
-              value={url}
-              onChange={(event) => setUrl(event.target.value)}
+              {...url}
             />
           </div>
           <button onClick={toggleDisplayFormFlag} type='button'>cancel</button>

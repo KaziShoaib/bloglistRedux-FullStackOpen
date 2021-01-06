@@ -1,28 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { loginUser } from '../reducers/userReducer';
+import { useField } from '../hooks';
 import '../index.css';
 
 //this component creates it's own states
-//it gets one function in props
-//once the log in button is pressed the login form submission function
-//sends the new user credentials to the props function
 
 const LoginForm = () => {
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { field: username, reset: resetUsername } = useField('text');
+  const { field: password, reset: resetPassword } = useField('password');
 
   const dispatch = useDispatch();
 
   //this function should be async and await the handleLogin function
   const sendUserCredentials = async (event) => {
     event.preventDefault();
-    const userCredentials = { username, password };
+    const userCredentials = { username: username.value, password: password.value };
     await dispatch(loginUser(userCredentials));
-    setUsername('');
-    setPassword('');
+    resetUsername();
+    resetPassword();
   };
 
   return (
@@ -34,20 +32,16 @@ const LoginForm = () => {
           Username:
           <input
             name="Username"
-            value={username}
-            type="text"
             id="username"
-            onChange = {event => setUsername(event.target.value)}
+            { ...username }
           />
         </div>
         <div>
           Password:
           <input
             name="Password"
-            value={password}
-            type="password"
             id='password'
-            onChange = {event => setPassword(event.target.value)}
+            { ...password }
           />
         </div>
         <button id='login-button' type="submit">Log in</button>
