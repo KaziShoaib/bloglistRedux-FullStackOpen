@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 
 import BlogList from './components/BlogList';
 import Notification from './components/Notification';
@@ -34,9 +39,9 @@ const App = () => {
   const userData = useSelector(state => state.userData);
 
   return (
+  /*
     <div>
       <Notification />
-
       {
         userData === null ?
           <LoginForm /> :
@@ -46,8 +51,26 @@ const App = () => {
             <BlogList />
           </div>
       }
-
     </div>
+      */
+
+    <div>
+      <Notification />
+      <Router>
+        <Switch>
+          <Route path = '/'>
+            { userData ?
+              <div>
+                <UserInfo />
+                <BlogForm />
+                <BlogList />
+              </div>
+              : <LoginForm /> }
+          </Route>
+        </Switch>
+      </Router>
+    </div>
+
   );
 };
 

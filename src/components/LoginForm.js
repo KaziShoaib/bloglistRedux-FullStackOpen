@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { loginUser } from '../reducers/userReducer';
 import { useField } from '../hooks';
@@ -13,12 +14,14 @@ const LoginForm = () => {
   const { field: password, reset: resetPassword } = useField('password');
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   //this function should be async and await the handleLogin function
   const sendUserCredentials = async (event) => {
     event.preventDefault();
     const userCredentials = { username: username.value, password: password.value };
     await dispatch(loginUser(userCredentials));
+    history.push('/');
     resetUsername();
     resetPassword();
   };
