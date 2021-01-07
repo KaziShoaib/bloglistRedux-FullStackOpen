@@ -15,8 +15,10 @@ const Blog = () => {
 
   const userData = useSelector(state => state.userData);
 
+  //this condition is for helpint with delete, more in the handDelete function
   if(!userData || !blog)
     return null;
+
 
   let showDeleteButton = { display : 'none' };
   if(userData){
@@ -30,6 +32,11 @@ const Blog = () => {
     if(window.confirm(`Do you want to delete ${blog.title}?`)){
       await dispatch(removeBlog(id));
       history.push('/');
+      //this line does not work
+      // after deleting instead of going back to home page
+      // this component is reloaded
+      // to prevent that an if condition is added above
+      // that checks if the userData or blog does not exist null is returned
     }
   };
 
