@@ -3,10 +3,13 @@ import { useDispatch, useSelector  } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect,
+  Link
 } from 'react-router-dom';
 
 import BlogList from './components/BlogList';
+import Blog from './components/Blog';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -33,39 +36,43 @@ const App = () => {
       const userData = JSON.parse(loggedUserDataJSON);
       dispatch(initializeUser(userData));
       //setToken will prepared a bearer token in the blogService local variable token
+      //the task of setting token has been transferred to the reducer
     }
   }, [dispatch]);
 
   const userData = useSelector(state => state.userData);
 
   return (
-  /*
-    <div>
-      <Notification />
-      {
-        userData === null ?
-          <LoginForm /> :
-          <div>
-            <UserInfo />
-            <BlogForm />
-            <BlogList />
-          </div>
-      }
-    </div>
-      */
 
     <div>
       <Notification />
       <Router>
+        {userData ?
+          <div>
+            <UserInfo />
+            <Link to='/'>
+              <button>
+                All Blogs
+              </button>
+            </Link>
+          </div>
+          : <div></div>
+        }
+
         <Switch>
-          <Route path = '/'>
+          <Route exact path = '/blogs/:id'>
+            {userData ? <Blog /> : <Redirect to='/login' />}
+          </Route>
+          <Route exact path ='/login' >
+            { userData ? <Redirect to='/' /> : <LoginForm />}
+          </Route>
+          <Route exact path = '/'>
             { userData ?
               <div>
-                <UserInfo />
                 <BlogForm />
                 <BlogList />
               </div>
-              : <LoginForm /> }
+              : <Redirect to='/login' /> }
           </Route>
         </Switch>
       </Router>

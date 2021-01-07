@@ -42,7 +42,7 @@ export const logoutUser = () => {
       type: 'CLEAR_USER'
     });
     blogService.setToken(null);
-    dispatch(createNotification('success', 'Logout Successful', 5000));
+    dispatch(createNotification('success', 'Logout Successful', 500));
   };
 };
 

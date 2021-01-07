@@ -17,14 +17,14 @@ let timeoutID = null;
 
 export const createNotification = (notificationType, message, waitingTime) => {
   return async dispatch => {
+    if(timeoutID !== null){
+      clearTimeout(timeoutID);
+    }
     const actionType = notificationType === 'success' ? 'SET_SUCCESS_MESSAGE' : 'SET_ERROR_MESSAGE';
     dispatch({
       type: actionType,
       message: message
     });
-    if(timeoutID !== null){
-      clearTimeout(timeoutID);
-    }
     timeoutID = setTimeout(() => {
       dispatch({
         type: 'CLEAR_ALL'
