@@ -14,6 +14,8 @@ import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import UserInfo from './components/UserInfo';
+import UserList from './components/UserList';
+import User from './components/User';
 
 
 import { initializeBlogs } from './reducers/blogReducer';
@@ -27,6 +29,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeBlogs());
   }, [dispatch]);
+
 
   useEffect(() => {
     //searching for log in info in the local storage
@@ -55,6 +58,11 @@ const App = () => {
                 All Blogs
               </button>
             </Link>
+            <Link to='/users'>
+              <button>
+                All Users
+              </button>
+            </Link>
           </div>
           : <div></div>
         }
@@ -62,6 +70,12 @@ const App = () => {
         <Switch>
           <Route exact path = '/blogs/:id'>
             {userData ? <Blog /> : <Redirect to='/login' />}
+          </Route>
+          <Route exact path='/users/:id'>
+            {userData ? <User /> : <Redirect to='/login' />}
+          </Route>
+          <Route exact path='/users'>
+            {userData ? <UserList/> : <Redirect to='/login' />}
           </Route>
           <Route exact path ='/login' >
             { userData ? <Redirect to='/' /> : <LoginForm />}
