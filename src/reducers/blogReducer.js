@@ -17,6 +17,14 @@ const blogReducer = (state=[], action) => {
       return state.map(blog =>
         blog.id === id ? { ...blog, likes: blog.likes+1 } : blog);
     }
+    case 'ADD_COMMENT' : {
+      const id = action.data.id;
+      const newComment = action.data.newComment;
+      return state.map(blog =>
+        blog.id === id ?
+          { ...blog, comments : [...blog.comments, newComment] }
+          : blog);
+    }
     default:
       return state;
   }
@@ -53,6 +61,29 @@ export const createNewBlog = (blogObject, userData) => {
       dispatch(createNotification('success', `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 5000));
     } catch(exception){
       dispatch(createNotification('error', exception.response.data.error, 5000));
+    }
+  };
+};
+
+
+export const addCommentTo = (id, blogObject, newComment) => {
+  return async dispatch => {
+    try {
+      const commentsObject = { comments: [...blogObject.comments, newComment] };
+      await blogService.update(id, commentsObject);
+      dispatch({
+        type: 'ADD_COMMENT',
+        data: {
+          id: id,
+          newComment : newComment
+        }
+      });
+    } catch(exception) {
+      dispatch(createNotification('error', `Blog ${blogObject.title} has been deleted`, 5000));
+      dispatch({
+        type : 'DELETE_BLOG',
+        data : { id }
+      });
     }
   };
 };

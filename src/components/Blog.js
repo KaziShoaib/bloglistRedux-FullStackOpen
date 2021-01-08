@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { removeBlog, addLikeTo } from '../reducers/blogReducer';
+import { removeBlog, addLikeTo, addCommentTo } from '../reducers/blogReducer';
 import '../index.css';
 import { useParams, useHistory } from 'react-router-dom';
 
@@ -44,6 +44,13 @@ const Blog = () => {
     dispatch(addLikeTo(id, blogObject));
   };
 
+  const addComment = (event) => {
+    event.preventDefault();
+    const newComment = event.target.comment.value;
+    event.target.comment.value = '';
+    dispatch(addCommentTo(blog.id, blog, newComment));
+  };
+
   return (
     <div className='blog'>
       <p>
@@ -59,6 +66,18 @@ const Blog = () => {
         {blog.user.name}
       </p>
       <button style={showDeleteButton} className='delete-button' onClick={() => handleDelete(blog.id)}>Delete</button>
+      <div>
+        <form onSubmit={(event) => addComment(event)}>
+          <input type='text' name='comment' />
+          <button type='submit'>Add a comment</button>
+        </form>
+      </div>
+      <div>
+        <h4>comments</h4>
+        <ul>
+          {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
+        </ul>
+      </div>
     </div>
   );
 };
