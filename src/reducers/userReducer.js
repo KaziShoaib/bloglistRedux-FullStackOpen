@@ -2,7 +2,13 @@ import loginService from '../services/login';
 import blogService from '../services/blogs';
 import { createNotification } from './notificationReducer';
 
-const userReducer = (state = null, action) => {
+let initialUserData = null;
+const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
+if(loggedUserDataJSON){
+  initialUserData = JSON.parse(loggedUserDataJSON);
+}
+
+const userReducer = (state = initialUserData, action) => {
   switch(action.type) {
     case 'INIT_USER' :
     case 'SET_USER' :
