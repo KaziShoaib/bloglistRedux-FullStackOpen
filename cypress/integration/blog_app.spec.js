@@ -26,8 +26,9 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes } ) => {
     method:'POST',
     body:{ title, author, url, likes },
     headers: { 'Authorization' : `bearer ${JSON.parse(localStorage.getItem('loggedBlogappUser')).token}` }
+  }).then(() => {
+    cy.visit('http://localhost:3000');
   });
-  cy.visit('http://localhost:3000');
 });
 
 
@@ -112,7 +113,7 @@ describe('Blog App', function(){
 
 
       it('like can be incresed by clikcing like button', function(){
-        cy.get('.view-button').click();
+        cy.contains(newBlog.title).click();
         cy.get('.like-button').click();
         cy.get('.like-count').should('not.contain','5');
         cy.get('.like-count').should('contain','6');
@@ -120,7 +121,7 @@ describe('Blog App', function(){
 
 
       it('a blog can be deleted by it\'s creator', function(){
-        cy.get('.view-button').click();
+        cy.contains(newBlog.title).click();
         cy.get('.delete-button').click();
         cy.on('window:confirm', () => true);
         cy.get('.blog').should('not.exist');
@@ -136,7 +137,7 @@ describe('Blog App', function(){
         };
         cy.request('POST', 'http://localhost:3001/api/users', newUser);
         cy.login({ username: newUser.username, password:newUser.password });
-        cy.get('.view-button').click();
+        cy.contains(newBlog.title).click();
         cy.get('.delete-button').should('have.css', 'display', 'none');
       });
     });
@@ -151,12 +152,15 @@ describe('Blog App', function(){
 
 
       it('blogs can be sorted by likes in decreasing order', function(){
-        cy.get('.view-button').click({ multiple: true });
+        //cy.get('.view-button').click({ multiple: true });
+        cy.contains('blog1');
+        cy.contains('blog2');
+        cy.contains('blog3');
         cy.get('#sort-button').click();
-        cy.get('.blogDetail').then(blogs => {
-          cy.wrap(blogs[0]).contains('Likes 15');
-          cy.wrap(blogs[1]).contains('Likes 10');
-          cy.wrap(blogs[2]).contains('Likes 8');
+        cy.get('.blog-title').then(titles => {
+          cy.wrap(titles[0]).contains('blog2');
+          cy.wrap(titles[1]).contains('blog3');
+          cy.wrap(titles[2]).contains('blog1');
         });
       });
     });

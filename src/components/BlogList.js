@@ -20,7 +20,7 @@ const BlogList = () => {
       <h2>BLOGS</h2>
       {blogs.map(blog =>
         <div key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <Link to={`/blogs/${blog.id}`} className='blog-title'>{blog.title}</Link>
           <br/>
         </div>
       )}

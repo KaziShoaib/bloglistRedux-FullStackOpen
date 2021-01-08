@@ -2,10 +2,14 @@ import loginService from '../services/login';
 import blogService from '../services/blogs';
 import { createNotification } from './notificationReducer';
 
+
+//App sometimes loads before the useEffect for user initialization is finished
+//these lines here do the exact things as that useEffect function
 let initialUserData = null;
 const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
 if(loggedUserDataJSON){
   initialUserData = JSON.parse(loggedUserDataJSON);
+  blogService.setToken(initialUserData.token);
 }
 
 const userReducer = (state = initialUserData, action) => {

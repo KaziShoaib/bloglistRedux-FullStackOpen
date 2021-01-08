@@ -19,7 +19,7 @@ import User from './components/User';
 
 
 import { initializeBlogs } from './reducers/blogReducer';
-//import { initializeUser  } from './reducers/userReducer';
+import { initializeUser  } from './reducers/userReducer';
 
 
 const App = () => {
@@ -31,18 +31,19 @@ const App = () => {
   }, [dispatch]);
 
 
-  // useEffect(() => {
-  //   //searching for log in info in the local storage
-  //   const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
-  //   console.log('here in useEffect');
-  //   if(loggedUserDataJSON){
-  //     //userData contains the token, username and name
-  //     const userDataFromLocalStorage = JSON.parse(loggedUserDataJSON);
-  //     dispatch(initializeUser(userDataFromLocalStorage));
-  //     //setToken will prepared a bearer token in the blogService local variable token
-  //     //the task of setting token has been transferred to the reducer
-  //   }
-  // }, [dispatch]);
+  //App starts loading before useEffect() is completed
+  //this exact same tasks have been repeated on top of userReducer
+  //technically this useEffect() is not necessary
+  useEffect(() => {
+    //searching for log in info in the local storage
+    const loggedUserDataJSON = window.localStorage.getItem('loggedBlogappUser');
+    if(loggedUserDataJSON){
+      //userData contains the token, username and name
+      const userDataFromLocalStorage = JSON.parse(loggedUserDataJSON);
+      //the dispathed action will also set the token in the blogService variable
+      dispatch(initializeUser(userDataFromLocalStorage));
+    }
+  }, [dispatch]);
 
 
   const userData = useSelector(state => state.userData);
