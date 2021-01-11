@@ -1,21 +1,22 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import '../index.css';
+import { Alert } from 'react-bootstrap';
+//import '../index.css';
 
 const Notification = () => {
   const { successMessage, errorMessage } = useSelector(state => state.notifications);
   if(successMessage){
     return (
-      <div className='success'>
+      <Alert variant='success'>
         {successMessage}
-      </div>
+      </Alert>
     );
   }
   if(errorMessage){
     return (
-      <div className='error'>
+      <Alert variant='danger'>
         {errorMessage}
-      </div>
+      </Alert>
     );
   }
   return null;

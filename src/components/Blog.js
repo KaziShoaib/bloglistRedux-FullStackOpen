@@ -52,10 +52,10 @@ const Blog = () => {
   };
 
   return (
-    <div className='blog'>
-      <p>
-        {blog.title} {blog.author}
-      </p>
+    <div>
+      <h4 className='mt-3'>
+        {blog.title} <em>{blog.author}</em>
+      </h4>
       <p>
         <a href={blog.url}>{blog.url}</a>
       </p>
@@ -63,7 +63,7 @@ const Blog = () => {
         Likes <span className='like-count'>{blog.likes}</span> <button onClick={() => addLike(blog.id, blog)} className='like-button'>Like</button>
       </p>
       <p>
-        {blog.user.name}
+        Added by {blog.user.name}
       </p>
       <button style={showDeleteButton} className='delete-button' onClick={() => handleDelete(blog.id)}>Delete</button>
       <div>

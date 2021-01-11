@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 
 import { loginUser } from '../reducers/userReducer';
 import { useField } from '../hooks';
-import '../index.css';
+//import '../index.css';
+import { Form, Button } from 'react-bootstrap';
 
 //this component creates it's own states
 
@@ -28,9 +29,32 @@ const LoginForm = () => {
 
   return (
     <div>
-      <h2>Log in to application</h2>
-      <form onSubmit={sendUserCredentials}>
+      <h2 className='text-primary'>Log in to application</h2>
+      <Form onSubmit={sendUserCredentials}>
         {/* the ids are given for test purpose */}
+        <Form.Group>
+          <Form.Label>
+            Username
+          </Form.Label>
+          <Form.Control
+            name="Username"
+            id="username"
+            { ...username }
+          />
+          <Form.Label>
+            Password
+          </Form.Label>
+          <Form.Control
+            name="Password"
+            id='password'
+            { ...password }
+          />
+          <Button variant="primary" type="submit">
+            login
+          </Button>
+        </Form.Group>
+      </Form>
+      {/* <form onSubmit={sendUserCredentials}>
         <div>
           Username:
           <input
@@ -48,7 +72,7 @@ const LoginForm = () => {
           />
         </div>
         <button id='login-button' type="submit">Log in</button>
-      </form>
+      </form> */}
     </div>
   );
 };

@@ -7,19 +7,22 @@ import {
   Redirect,
   Link
 } from 'react-router-dom';
+import { Navbar, Nav, Button } from 'react-bootstrap';
+
 
 import BlogList from './components/BlogList';
 import Blog from './components/Blog';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
-import UserInfo from './components/UserInfo';
 import UserList from './components/UserList';
 import User from './components/User';
 
 
 import { initializeBlogs } from './reducers/blogReducer';
 import { initializeUser  } from './reducers/userReducer';
+import { logoutUser } from './reducers/userReducer';
+
 
 
 const App = () => {
@@ -49,26 +52,44 @@ const App = () => {
   const userData = useSelector(state => state.userData);
   console.log('userData from app component',userData);
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
   return (
 
-    <div>
+    <div className='container'>
       <Notification />
       <Router>
         {userData ?
-          <div>
-            <UserInfo />
-            <Link to='/'>
-              <button>
-                All Blogs
-              </button>
-            </Link>
-            <Link to='/users'>
-              <button>
-                All Users
-              </button>
-            </Link>
-          </div>
-          : <div></div>
+          <Navbar collapseOnSelect expand='lg' variant='dark' bg='primary'>
+            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Collapse id='responsive-navbar-nav'>
+              <Nav className='mr-auto'>
+                <Nav.Link href='#' as='span'>
+                  <Button>
+                    <Link to='/' className='text-white'>All Blogs</Link>
+                  </Button>
+                </Nav.Link>
+                <Nav.Link href='#' as='span'>
+                  <Button>
+                    <Link to='/users' className='text-white'>All Users</Link>
+                  </Button>
+                </Nav.Link>
+                <Nav.Link href='#' as='span'>
+                  <Button>
+                    <em>{userData.name} logged in</em>
+                  </Button>
+                </Nav.Link>
+                <Nav.Link href='#' as='span'>
+                  <Button onClick={handleLogout}>
+                    Log Out
+                  </Button>
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>  :
+          <div></div>
         }
 
         <Switch>

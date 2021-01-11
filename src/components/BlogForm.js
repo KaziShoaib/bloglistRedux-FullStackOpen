@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { createNewBlog } from '../reducers/blogReducer';
 import { useField } from '../hooks';
-import '../index.css';
+import { Form } from 'react-bootstrap';
+//import '../index.css';
 
 //this component creates it's own states
 
@@ -35,39 +36,40 @@ const BlogForm = () => {
   return (
     <div>
       <div style={hideWhenDisplayed}>
-        <button onClick={toggleDisplayFormFlag}>Add a Blog</button>
+        <button className='btn btn-primary mt-3' onClick={toggleDisplayFormFlag}>Add a Blog</button>
       </div>
       <div style={showWhenDisplayed}>
-        <h2>Add a new blog</h2>
-        <form onSubmit={sendNewBlog}>
+        <h2 className='text-primary'>Add a new blog</h2>
+        <Form onSubmit={sendNewBlog}>
           {/* the ids are given to input fields for testing purpose */}
-          <div>
-            Title:
-            <input
-              name="Title"
-              id='title'
-              {...title}
-            />
-          </div>
-          <div>
-            Author:
-            <input
-              name="Author"
-              id='author'
-              {...author}
-            />
-          </div>
-          <div>
-            URL:
-            <input
-              name="URL"
-              id='url'
-              {...url}
-            />
-          </div>
-          <button onClick={toggleDisplayFormFlag} type='button'>cancel</button>
-          <button id='submit-blog-button' type='submit'>create</button>
-        </form>
+          <Form.Label>
+            Title
+          </Form.Label>
+          <Form.Control
+            name="Title"
+            id='title'
+            {...title}
+          />
+          <Form.Label>
+            Author
+          </Form.Label>
+          <Form.Control
+            name="Author"
+            id='author'
+            {...author}
+          />
+          <Form.Label>
+            URL
+          </Form.Label>
+          <Form.Control
+            name="URL"
+            id='url'
+            {...url}
+          />
+          <button
+            className='btn btn-warning mr-2 my-2' onClick={toggleDisplayFormFlag} type='button'>cancel</button>
+          <button className='btn btn-primary my-2' id='submit-blog-button' type='submit'>create</button>
+        </Form>
       </div>
     </div>
   );

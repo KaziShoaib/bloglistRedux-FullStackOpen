@@ -23,10 +23,10 @@ const User = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h4>Added Blogs</h4>
-      <ul>
-        {user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
+      <h2 className='text-info mt-3'>{user.name}</h2>
+      <h4 className='text-info mt-3'>Added Blogs</h4>
+      <ul className='list-group mt-3'>
+        {user.blogs.map(blog => <li key={blog.id} className='list-group-item'>{blog.title}</li>)}
       </ul>
     </div>
   );
